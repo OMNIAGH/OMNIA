@@ -1,0 +1,139 @@
+# MIDAS Google OPAL - Reglas de Optimización Predefinidas
+
+# REGLAS DE OPTIMIZACIÓN DE PUJAS
+{
+  "bid_optimization_rules": [
+    {
+      "rule_name": "Alto ROAS - Aumentar Pujas",
+      "rule_type": "bid_optimization",
+      "conditions": {
+        "min_roas": 4.0,
+        "min_conversions": 10
+      },
+      "actions": {
+        "optimize_bids": true,
+        "bid_increase_percentage": 0.2
+      }
+    },
+    {
+      "rule_name": "Bajo CTR - Reducir Pujas",
+      "rule_type": "bid_optimization",
+      "conditions": {
+        "low_ctr": 2.0
+      },
+      "actions": {
+        "optimize_bids": true,
+        "bid_decrease_percentage": 0.15
+      }
+    }
+  ],
+  
+  # REGLAS DE NEGATIVE KEYWORDS
+  "negative_keywords_rules": [
+    {
+      "rule_name": "Bloquear Términos de Búsqueda Irrelevantes",
+      "rule_type": "negative_keywords",
+      "conditions": {
+        "min_impressions": 1000,
+        "click_through_rate_threshold": 0.01,
+        "cost_threshold": 50.0
+      },
+      "actions": {
+        "add_negative_keywords": [
+          "gratis",
+          "free",
+          "download",
+          "torrent",
+          "crack",
+          "serial",
+          "keygen"
+        ]
+      }
+    }
+  ],
+  
+  # REGLAS DE PAUSA DE ANUNCIOS
+  "ad_pause_rules": [
+    {
+      "rule_name": "Pausar Anuncios de Bajo Rendimiento",
+      "rule_type": "pause_ads",
+      "conditions": {
+        "min_clicks": 50,
+        "max_cpc": 5.0,
+        "min_impressions": 1000
+      },
+      "actions": {
+        "pause_poor_ads": {
+          "min_clicks": 20,
+          "max_cpc": 3.0,
+          "min_impressions": 500
+        }
+      }
+    }
+  ],
+  
+  # REGLAS DE CREACIÓN DE ANUNCIOS
+  "ad_creation_templates": [
+    {
+      "rule_name": "Anuncios de Búsqueda Estándar",
+      "rule_type": "create_ads",
+      "conditions": {
+        "performance_threshold": "above_average"
+      },
+      "actions": {
+        "create_new_ads": [
+          {
+            "final_urls": ["https://example.com/landing-page"],
+            "headlines": [
+              "Oferta Especial - {keyword} - {promotion_text}",
+              "Descuento en {keyword} - Solo Hoy",
+              "{keyword} al Mejor Precio - Envío Gratis"
+            ],
+            "descriptions": [
+              "Encuentra las mejores ofertas en {keyword}. Calidad garantizada.",
+              "Ahorra tiempo y dinero con nuestros {keyword}. Envío 24h."
+            ],
+            "display_paths": ["ofertas", "es"]
+          }
+        ]
+      }
+    }
+  ],
+  
+  # REGLAS DE AJUSTE DE PRESUPUESTO
+  "budget_adjustment_rules": [
+    {
+      "rule_name": "Aumentar Presupuesto Campañas Exitosas",
+      "rule_type": "budget_adjustment",
+      "conditions": {
+        "min_roas": 3.0,
+        "min_conversions": 15,
+        "min_days_running": 7
+      },
+      "actions": {
+        "adjust_budget": {
+          "increase_percentage": 0.3,
+          "min_budget": 1000,
+          "max_budget": 10000
+        }
+      }
+    }
+  ],
+  
+  # UMBRALES DE QUALITY SCORE
+  "quality_score_thresholds": {
+    "critical_threshold": 4.0,
+    "low_threshold": 6.0,
+    "medium_threshold": 7.0,
+    "high_threshold": 8.0
+  },
+  
+  # CONFIGURACIÓN DE MONITOREO
+  "monitoring_config": {
+    "quality_score_check_interval_hours": 1,
+    "optimization_check_interval_hours": 6,
+    "dashboard_update_interval_minutes": 5,
+    "alert_notifications": true,
+    "performance_prediction_enabled": true
+  }
+}

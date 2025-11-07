@@ -1,0 +1,58 @@
+
+# REPORTE EJECUTIVO MIDAS ROI TRACKING
+**Período:** 2025-10-07 a 2025-11-06
+**Generado:** 2025-11-06 21:13:57
+
+## 📊 MÉTRICAS CLAVE DE ROI
+
+### Rendimiento Financiero
+- **ROAS (Return on Ad Spend):** 4.32:1
+- **Revenue Total:** $2,157.92
+- **Costo Total:** $500.00
+- **Beneficio Neto:** $1,657.92
+- **ROI:** 331.58%
+
+### Métricas de Cliente
+- **LTV Promedio:** $0.00
+- **CAC Promedio:** $166.67
+- **Ratio LTV/CAC:** 0.0:1
+
+## 🛡️ ESTADO DE FRAUDE
+- **Score de Fraude:** 0/100
+- **Alertas de Click Spam:** 0
+- **Alertas de Conversión:** 0
+- **Alertas de Bot Traffic:** 0
+
+**Estado:** 🟢 SALUDABLE
+
+## 🏆 TOP CAMPAÑAS
+### Top 5 Campañas por Revenue
+
+| Campaña | Revenue | ROAS | Clientes | Beneficio |
+|---------|---------|------|----------|----------|
+| summer_sale | $4,800 | 6.0:1 | 1 | $4,000 |
+| retargeting | $2,392 | 2.99:1 | 1 | $1,592 |
+| black_friday | $1,440 | 3.6:1 | 1 | $1,040 |
+
+
+## 📈 RESUMEN DE ATRIBUCIÓN
+### Performance por Canal
+
+| Canal | Revenue | Conversiones |
+|-------|---------|-------------|
+| google_ads | $6,240 | 32 |
+| facebook_ads | $2,392 | 16 |
+
+
+## 💡 RECOMENDACIONES EJECUTIVAS
+1. Campaña 'summer_sale' con excelente ROAS - aumentar presupuesto
+2. Diversificar fuentes de tráfico para reducir dependencia
+3. Implementar más seguimiento cross-device
+
+
+## 📋 ACCIONES REQUERIDAS
+✅ **SISTEMA SALUDABLE:** No se requieren acciones inmediatas
+
+---
+*Reporte generado automáticamente por MIDAS ROI Tracking System*
+        

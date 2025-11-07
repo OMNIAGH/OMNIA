@@ -1,0 +1,92 @@
+{
+  "export_timestamp": "2025-11-06T21:13:57.940375",
+  "system_metrics": {
+    "timestamp": "2025-11-06T21:13:58.037582",
+    "roi_metrics": {
+      "roas": 4.32,
+      "ltv": 0.0,
+      "ltv_cac_ratio": 0.0,
+      "cac": 166.67,
+      "total_revenue": 2157.92,
+      "total_cost": 500.0,
+      "profit": 1657.92,
+      "roi_percentage": 331.58
+    },
+    "cross_device_metrics": {
+      "unique_users": 3,
+      "unique_devices": 3,
+      "cross_device_users": 0,
+      "avg_devices_per_user": 0,
+      "cross_device_rate": 0.0
+    },
+    "fraud_score": 0,
+    "fraud_alerts": {
+      "click_spam": [],
+      "conversion_fraud": [],
+      "bot_traffic": []
+    },
+    "attribution_summary": {
+      "top_campaigns": [
+        {
+          "campaign": "summer_sale",
+          "total_value": 4799.839999999998,
+          "conversions": 16,
+          "roas": 6.0
+        },
+        {
+          "campaign": "retargeting",
+          "total_value": 2392.0,
+          "conversions": 16,
+          "roas": 2.99
+        },
+        {
+          "campaign": "black_friday",
+          "total_value": 1439.84,
+          "conversions": 16,
+          "roas": 1.8
+        }
+      ],
+      "top_channels": [
+        {
+          "source": "google_ads",
+          "total_value": 1559.92,
+          "total_cost": 300.0,
+          "roi": 419.97
+        },
+        {
+          "source": "facebook_ads",
+          "total_value": 598.0,
+          "total_cost": 200.0,
+          "roi": 199.0
+        }
+      ]
+    },
+    "system_status": "HEALTHY"
+  },
+  "fraud_analysis": {
+    "click_spam": [],
+    "conversion_fraud": [],
+    "bot_traffic": []
+  },
+  "top_campaigns": [
+    {
+      "user_id": "user_123",
+      "total_value": 1199.96,
+      "conversions": 4,
+      "avg_order_value": 299.99
+    },
+    {
+      "user_id": "user_456",
+      "total_value": 598.0,
+      "conversions": 4,
+      "avg_order_value": 149.5
+    },
+    {
+      "user_id": "user_789",
+      "total_value": 359.96,
+      "conversions": 4,
+      "avg_order_value": 89.99
+    }
+  ],
+  "executive_report": "\n# REPORTE EJECUTIVO MIDAS ROI TRACKING\n**Per\u00edodo:** 2025-10-07 a 2025-11-06\n**Generado:** 2025-11-06 21:13:58\n\n## \ud83d\udcca M\u00c9TRICAS CLAVE DE ROI\n\n### Rendimiento Financiero\n- **ROAS (Return on Ad Spend):** 4.32:1\n- **Revenue Total:** $2,157.92\n- **Costo Total:** $500.00\n- **Beneficio Neto:** $1,657.92\n- **ROI:** 331.58%\n\n### M\u00e9tricas de Cliente\n- **LTV Promedio:** $0.00\n- **CAC Promedio:** $166.67\n- **Ratio LTV/CAC:** 0.0:1\n\n## \ud83d\udee1\ufe0f ESTADO DE FRAUDE\n- **Score de Fraude:** 0/100\n- **Alertas de Click Spam:** 0\n- **Alertas de Conversi\u00f3n:** 0\n- **Alertas de Bot Traffic:** 0\n\n**Estado:** \ud83d\udfe2 SALUDABLE\n\n## \ud83c\udfc6 TOP CAMPA\u00d1AS\n### Top 5 Campa\u00f1as por Revenue\n\n| Campa\u00f1a | Revenue | ROAS | Clientes | Beneficio |\n|---------|---------|------|----------|----------|\n| summer_sale | $4,800 | 6.0:1 | 1 | $4,000 |\n| retargeting | $2,392 | 2.99:1 | 1 | $1,592 |\n| black_friday | $1,440 | 3.6:1 | 1 | $1,040 |\n\n\n## \ud83d\udcc8 RESUMEN DE ATRIBUCI\u00d3N\n### Performance por Canal\n\n| Canal | Revenue | Conversiones |\n|-------|---------|-------------|\n| google_ads | $6,240 | 32 |\n| facebook_ads | $2,392 | 16 |\n\n\n## \ud83d\udca1 RECOMENDACIONES EJECUTIVAS\n1. Campa\u00f1a 'summer_sale' con excelente ROAS - aumentar presupuesto\n2. Diversificar fuentes de tr\u00e1fico para reducir dependencia\n3. Implementar m\u00e1s seguimiento cross-device\n\n\n## \ud83d\udccb ACCIONES REQUERIDAS\n\u2705 **SISTEMA SALUDABLE:** No se requieren acciones inmediatas\n\n---\n*Reporte generado autom\u00e1ticamente por MIDAS ROI Tracking System*\n        "
+}

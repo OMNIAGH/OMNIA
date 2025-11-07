@@ -1,0 +1,900 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NOESIS A/B Testing Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/date-fns@2.29.3/index.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+        
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .header h1 {
+            color: #4a5568;
+            font-size: 1.8rem;
+            font-weight: 600;
+        }
+        
+        .header .subtitle {
+            color: #718096;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+        }
+        
+        .card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .card-icon {
+            font-size: 1.5rem;
+            margin-right: 0.75rem;
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+        
+        .icon-success { background: linear-gradient(45deg, #10b981, #34d399); }
+        .icon-warning { background: linear-gradient(45deg, #f59e0b, #fbbf24); }
+        .icon-info { background: linear-gradient(45deg, #3b82f6, #60a5fa); }
+        .icon-primary { background: linear-gradient(45deg, #8b5cf6, #a78bfa); }
+        
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #2d3748;
+        }
+        
+        .card-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #1a202c;
+            margin-bottom: 0.5rem;
+        }
+        
+        .card-subtitle {
+            color: #718096;
+            font-size: 0.9rem;
+        }
+        
+        .chart-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            margin-bottom: 1.5rem;
+            backdrop-filter: blur(10px);
+        }
+        
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .chart-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #2d3748;
+        }
+        
+        .chart-controls {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn-secondary {
+            background: #e2e8f0;
+            color: #4a5568;
+        }
+        
+        .btn-secondary:hover {
+            background: #cbd5e0;
+        }
+        
+        .experiment-table {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            overflow-x: auto;
+        }
+        
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .table th,
+        .table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .table th {
+            background: #f7fafc;
+            font-weight: 600;
+            color: #2d3748;
+        }
+        
+        .table tr:hover {
+            background: #f7fafc;
+        }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            text-transform: uppercase;
+        }
+        
+        .status-running {
+            background: #dbeafe;
+            color: #1d4ed8;
+        }
+        
+        .status-completed {
+            background: #d1fae5;
+            color: #065f46;
+        }
+        
+        .status-paused {
+            background: #fef3c7;
+            color: #92400e;
+        }
+        
+        .lift-positive {
+            color: #10b981;
+            font-weight: 600;
+        }
+        
+        .lift-negative {
+            color: #ef4444;
+            font-weight: 600;
+        }
+        
+        .recommendations-section {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            margin-top: 1.5rem;
+        }
+        
+        .recommendation-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+            padding: 1rem;
+            background: #f8fafc;
+            border-radius: 8px;
+            border-left: 4px solid #3b82f6;
+        }
+        
+        .recommendation-icon {
+            margin-right: 0.75rem;
+            color: #3b82f6;
+            font-size: 1.1rem;
+            margin-top: 0.1rem;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e2e8f0;
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 0.5rem 0;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(45deg, #10b981, #34d399);
+            transition: width 0.3s ease;
+        }
+        
+        .insights-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .insight-card {
+            background: #f8fafc;
+            border-radius: 8px;
+            padding: 1rem;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .insight-title {
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 0.5rem;
+        }
+        
+        .insight-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1a202c;
+        }
+        
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 200px;
+            color: #718096;
+        }
+        
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #e2e8f0;
+            border-top: 4px solid #3b82f6;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .metric-comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .metric-box {
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+        }
+        
+        .metric-control {
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+        }
+        
+        .metric-variant {
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .metric-comparison {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1><i class="fas fa-chart-line"></i> NOESIS A/B Testing Dashboard</h1>
+        <div class="subtitle">Sistema de experimentación automática y análisis estadístico avanzado</div>
+    </div>
+    
+    <div class="container">
+        <!-- Métricas principales -->
+        <div class="dashboard-grid" id="metricsGrid">
+            <div class="loading">
+                <div class="spinner"></div>
+            </div>
+        </div>
+        
+        <!-- Gráficos principales -->
+        <div class="chart-container">
+            <div class="chart-header">
+                <h2 class="chart-title"><i class="fas fa-chart-bar"></i> Rendimiento de Experimentos</h2>
+                <div class="chart-controls">
+                    <button class="btn btn-secondary" onclick="updateChart('daily')">Diario</button>
+                    <button class="btn btn-secondary" onclick="updateChart('weekly')">Semanal</button>
+                    <button class="btn btn-primary" onclick="refreshData()">Actualizar</button>
+                </div>
+            </div>
+            <canvas id="performanceChart" width="400" height="200"></canvas>
+        </div>
+        
+        <!-- Comparación de métricas -->
+        <div class="chart-container">
+            <div class="chart-header">
+                <h2 class="chart-title"><i class="fas fa-balance-scale"></i> Control vs Variante</h2>
+            </div>
+            <div class="metric-comparison" id="metricComparison">
+                <!-- Se llena dinámicamente -->
+            </div>
+            <canvas id="comparisonChart" width="400" height="200"></canvas>
+        </div>
+        
+        <!-- Tabla de experimentos -->
+        <div class="experiment-table">
+            <div class="chart-header">
+                <h2 class="chart-title"><i class="fas fa-flask"></i> Experimentos Activos</h2>
+                <button class="btn btn-primary" onclick="createNewExperiment()">
+                    <i class="fas fa-plus"></i> Nuevo Experimento
+                </button>
+            </div>
+            <table class="table" id="experimentsTable">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Estado</th>
+                        <th>Progreso</th>
+                        <th>Lift</th>
+                        <th>Significancia</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td colspan="7" class="loading">
+                            <div class="spinner"></div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- Recomendaciones -->
+        <div class="recommendations-section">
+            <h2 class="chart-title"><i class="fas fa-lightbulb"></i> Recomendaciones Inteligentes</h2>
+            <div id="recommendationsList">
+                <div class="loading">
+                    <div class="spinner"></div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Insights adicionales -->
+        <div class="insights-grid" id="insightsGrid">
+            <!-- Se llena dinámicamente -->
+        </div>
+    </div>
+    
+    <script>
+        // Configuración global
+        const CONFIG = {
+            apiEndpoint: '/api/ab-testing',
+            refreshInterval: 30000, // 30 segundos
+            animationDuration: 300
+        };
+        
+        // Estado global
+        let dashboardData = null;
+        let performanceChart = null;
+        let comparisonChart = null;
+        let currentTimeframe = 'daily';
+        
+        // Inicialización
+        document.addEventListener('DOMContentLoaded', function() {
+            loadDashboardData();
+            setInterval(refreshData, CONFIG.refreshInterval);
+        });
+        
+        // Cargar datos del dashboard
+        async function loadDashboardData() {
+            try {
+                // Simulación de datos - en un entorno real, esto sería una llamada API
+                const mockData = generateMockData();
+                dashboardData = mockData;
+                renderDashboard(mockData);
+            } catch (error) {
+                console.error('Error cargando datos del dashboard:', error);
+                showError('Error al cargar los datos del dashboard');
+            }
+        }
+        
+        // Generar datos simulados para demostración
+        function generateMockData() {
+            const experiments = [];
+            for (let i = 1; i <= 5; i++) {
+                const status = Math.random() > 0.6 ? 'running' : 'completed';
+                const lift = (Math.random() - 0.5) * 0.2; // -10% a +10%
+                const progress = status === 'running' ? Math.random() * 100 : 100;
+                
+                experiments.push({
+                    id: `exp_${i.toString().padStart(3, '0')}`,
+                    name: `Experimento de Test ${i}`,
+                    status: status,
+                    progress: Math.round(progress),
+                    lift: lift,
+                    significant: Math.random() > 0.5,
+                    controlRate: 0.08 + Math.random() * 0.04,
+                    variantRate: 0.08 + lift + Math.random() * 0.04,
+                    sampleSize: Math.round(1000 + Math.random() * 9000),
+                    createdAt: new Date(Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000)
+                });
+            }
+            
+            return {
+                summary: {
+                    totalExperiments: experiments.length,
+                    activeExperiments: experiments.filter(e => e.status === 'running').length,
+                    completedExperiments: experiments.filter(e => e.status === 'completed').length,
+                    significantResults: experiments.filter(e => e.significant).length,
+                    averageLift: experiments.reduce((sum, e) => sum + e.lift, 0) / experiments.length
+                },
+                experiments: experiments,
+                recommendations: [
+                    "Se detectaron 3 experimentos con alta significancia estadística",
+                    "El experimento exp_002 muestra un lift del 15.2%, considere implementarlo",
+                    "2 experimentos han alcanzado el tamaño de muestra objetivo",
+                    "Optimice la duración del experimento exp_005 para reducir el tiempo de análisis"
+                ],
+                performanceData: generatePerformanceData(),
+                comparisonData: {
+                    control: { conversions: 1250, visitors: 10000, rate: 0.125 },
+                    variant: { conversions: 1450, visitors: 10000, rate: 0.145 }
+                }
+            };
+        }
+        
+        function generatePerformanceData() {
+            const data = {
+                daily: [],
+                weekly: []
+            };
+            
+            // Datos diarios (últimos 30 días)
+            for (let i = 29; i >= 0; i--) {
+                const date = new Date();
+                date.setDate(date.getDate() - i);
+                data.daily.push({
+                    date: date.toISOString().split('T')[0],
+                    experiments: Math.floor(Math.random() * 5) + 1,
+                    lift: (Math.random() - 0.3) * 0.1,
+                    significance: Math.random()
+                });
+            }
+            
+            // Datos semanales (últimas 12 semanas)
+            for (let i = 11; i >= 0; i--) {
+                const date = new Date();
+                date.setDate(date.getDate() - (i * 7));
+                data.weekly.push({
+                    date: date.toISOString().split('T')[0],
+                    experiments: Math.floor(Math.random() * 15) + 5,
+                    lift: (Math.random() - 0.3) * 0.1,
+                    significance: Math.random()
+                });
+            }
+            
+            return data;
+        }
+        
+        // Renderizar el dashboard
+        function renderDashboard(data) {
+            renderMetrics(data.summary);
+            renderPerformanceChart();
+            renderComparisonChart();
+            renderExperimentsTable();
+            renderRecommendations();
+            renderInsights(data);
+        }
+        
+        // Renderizar métricas principales
+        function renderMetrics(summary) {
+            const metricsGrid = document.getElementById('metricsGrid');
+            metricsGrid.innerHTML = `
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon icon-primary">
+                            <i class="fas fa-flask"></i>
+                        </div>
+                        <div>
+                            <div class="card-title">Total Experimentos</div>
+                        </div>
+                    </div>
+                    <div class="card-value">${summary.totalExperiments}</div>
+                    <div class="card-subtitle">Experimentos en el sistema</div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon icon-success">
+                            <i class="fas fa-play"></i>
+                        </div>
+                        <div>
+                            <div class="card-title">Activos</div>
+                        </div>
+                    </div>
+                    <div class="card-value">${summary.activeExperiments}</div>
+                    <div class="card-subtitle">Corriendo actualmente</div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon icon-info">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <div>
+                            <div class="card-title">Completados</div>
+                        </div>
+                    </div>
+                    <div class="card-value">${summary.completedExperiments}</div>
+                    <div class="card-subtitle">Terminados exitosamente</div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon icon-warning">
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <div>
+                            <div class="card-title">Lift Promedio</div>
+                        </div>
+                    </div>
+                    <div class="card-value">${(summary.averageLift * 100).toFixed(1)}%</div>
+                    <div class="card-subtitle">Rendimiento promedio</div>
+                </div>
+            `;
+        }
+        
+        // Renderizar gráfico de rendimiento
+        function renderPerformanceChart() {
+            const ctx = document.getElementById('performanceChart').getContext('2d');
+            
+            if (performanceChart) {
+                performanceChart.destroy();
+            }
+            
+            const data = dashboardData.performanceData[currentTimeframe];
+            const labels = data.map(d => d.date);
+            const liftData = data.map(d => d.lift * 100);
+            const significanceData = data.map(d => d.significance * 100);
+            
+            performanceChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Lift (%)',
+                        data: liftData,
+                        borderColor: '#3b82f6',
+                        backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                        fill: true,
+                        tension: 0.4
+                    }, {
+                        label: 'Significancia (%)',
+                        data: significanceData,
+                        borderColor: '#10b981',
+                        backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        title: {
+                            display: true,
+                            text: `Rendimiento ${currentTimeframe === 'daily' ? 'Diario' : 'Semanal'}`
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Porcentaje (%)'
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Fecha'
+                            }
+                        }
+                    },
+                    animation: {
+                        duration: CONFIG.animationDuration
+                    }
+                }
+            });
+        }
+        
+        // Renderizar gráfico de comparación
+        function renderComparisonChart() {
+            const ctx = document.getElementById('comparisonChart').getContext('2d');
+            
+            if (comparisonChart) {
+                comparisonChart.destroy();
+            }
+            
+            const data = dashboardData.comparisonData;
+            
+            comparisonChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Control', 'Variante'],
+                    datasets: [{
+                        label: 'Conversiones',
+                        data: [data.control.conversions, data.variant.conversions],
+                        backgroundColor: ['#ef4444', '#10b981'],
+                        borderColor: ['#dc2626', '#059669'],
+                        borderWidth: 2
+                    }, {
+                        label: 'Visitantes',
+                        data: [data.control.visitors, data.variant.visitors],
+                        backgroundColor: ['#f59e0b', '#3b82f6'],
+                        borderColor: ['#d97706', '#2563eb'],
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        title: {
+                            display: true,
+                            text: 'Comparación de Métricas'
+                        }
+                    },
+                    animation: {
+                        duration: CONFIG.animationDuration
+                    }
+                }
+            });
+            
+            // Renderizar comparación detallada
+            const comparisonContainer = document.getElementById('metricComparison');
+            const controlRate = (data.control.rate * 100).toFixed(2);
+            const variantRate = (data.variant.rate * 100).toFixed(2);
+            const lift = ((data.variant.rate - data.control.rate) / data.control.rate * 100).toFixed(1);
+            
+            comparisonContainer.innerHTML = `
+                <div class="metric-box metric-control">
+                    <h3>Control</h3>
+                    <div class="insight-value">${controlRate}%</div>
+                    <div class="insight-title">Tasa de Conversión</div>
+                    <div class="card-subtitle">${data.control.conversions} conversiones</div>
+                </div>
+                <div class="metric-box metric-variant">
+                    <h3>Variante</h3>
+                    <div class="insight-value">${variantRate}%</div>
+                    <div class="insight-title">Tasa de Conversión</div>
+                    <div class="card-subtitle">${data.variant.conversions} conversiones</div>
+                </div>
+            `;
+        }
+        
+        // Renderizar tabla de experimentos
+        function renderExperimentsTable() {
+            const tbody = document.querySelector('#experimentsTable tbody');
+            
+            if (dashboardData.experiments.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; color: #718096;">No hay experimentos</td></tr>';
+                return;
+            }
+            
+            tbody.innerHTML = dashboardData.experiments.map(exp => `
+                <tr>
+                    <td><code>${exp.id}</code></td>
+                    <td>${exp.name}</td>
+                    <td>
+                        <span class="status-badge status-${exp.status}">
+                            ${exp.status === 'running' ? 'En Curso' : exp.status === 'completed' ? 'Completado' : 'Pausado'}
+                        </span>
+                    </td>
+                    <td>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: ${exp.progress}%"></div>
+                        </div>
+                        ${exp.progress}%
+                    </td>
+                    <td class="${exp.lift >= 0 ? 'lift-positive' : 'lift-negative'}">
+                        ${(exp.lift * 100).toFixed(1)}%
+                    </td>
+                    <td>
+                        ${exp.significant ? '<i class="fas fa-check-circle" style="color: #10b981;"></i>' : '<i class="fas fa-times-circle" style="color: #ef4444;"></i>'}
+                    </td>
+                    <td>
+                        <button class="btn btn-secondary" onclick="viewExperiment('${exp.id}')" style="margin-right: 0.5rem;">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                        ${exp.status === 'running' ? `
+                            <button class="btn btn-secondary" onclick="pauseExperiment('${exp.id}')" style="margin-right: 0.5rem;">
+                                <i class="fas fa-pause"></i>
+                            </button>
+                        ` : ''}
+                        <button class="btn btn-primary" onclick="downloadReport('${exp.id}')">
+                            <i class="fas fa-download"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+        
+        // Renderizar recomendaciones
+        function renderRecommendations() {
+            const container = document.getElementById('recommendationsList');
+            
+            if (dashboardData.recommendations.length === 0) {
+                container.innerHTML = '<p style="color: #718096; text-align: center;">No hay recomendaciones disponibles</p>';
+                return;
+            }
+            
+            container.innerHTML = dashboardData.recommendations.map((rec, index) => `
+                <div class="recommendation-item">
+                    <i class="fas fa-lightbulb recommendation-icon"></i>
+                    <div>
+                        <strong>Recomendación ${index + 1}:</strong> ${rec}
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        // Renderizar insights
+        function renderInsights(data) {
+            const container = document.getElementById('insightsGrid');
+            
+            const insights = [
+                {
+                    title: "Tasa de Éxito",
+                    value: `${((data.summary.significantResults / data.summary.completedExperiments) * 100).toFixed(1)}%`,
+                    subtitle: "Experimentos significativos"
+                },
+                {
+                    title: "Mejor Lift",
+                    value: `${(Math.max(...data.experiments.map(e => e.lift)) * 100).toFixed(1)}%`,
+                    subtitle: "Experimento top"
+                },
+                {
+                    title: "Tiempo Promedio",
+                    value: "12.5 días",
+                    subtitle: "Duración de experimentos"
+                },
+                {
+                    title: "ROI Estimado",
+                    value: "250%",
+                    subtitle: "Retorno de inversión"
+                }
+            ];
+            
+            container.innerHTML = insights.map(insight => `
+                <div class="insight-card">
+                    <div class="insight-title">${insight.title}</div>
+                    <div class="insight-value">${insight.value}</div>
+                    <div class="card-subtitle">${insight.subtitle}</div>
+                </div>
+            `).join('');
+        }
+        
+        // Funciones de interacción
+        function updateChart(timeframe) {
+            currentTimeframe = timeframe;
+            renderPerformanceChart();
+        }
+        
+        function refreshData() {
+            loadDashboardData();
+        }
+        
+        function createNewExperiment() {
+            // Abrir modal o redirigir a página de creación
+            alert('Funcionalidad de creación de experimentos - Próximamente');
+        }
+        
+        function viewExperiment(experimentId) {
+            // Mostrar detalles del experimento
+            alert(`Ver experimento: ${experimentId}`);
+        }
+        
+        function pauseExperiment(experimentId) {
+            // Pausar experimento
+            if (confirm(`¿Está seguro de pausar el experimento ${experimentId}?`)) {
+                console.log('Pausando experimento:', experimentId);
+                // Actualizar estado
+                refreshData();
+            }
+        }
+        
+        function downloadReport(experimentId) {
+            // Descargar reporte
+            alert(`Descargando reporte para: ${experimentId}`);
+        }
+        
+        function showError(message) {
+            // Mostrar mensaje de error
+            console.error(message);
+        }
+    </script>
+</body>
+</html>

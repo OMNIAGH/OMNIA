@@ -1,0 +1,326 @@
+# Templates de Anuncios para MIDAS Google OPAL
+# =============================================
+
+# TEMPLATE 1: ANUNCIOS DE BÚSQUEDA ESTÁNDAR
+{
+  "template_name": "Search Ads - Standard",
+  "template_type": "search_text_ad",
+  "description": "Template estándar para anuncios de búsqueda con ofertas",
+  "elements": {
+    "headlines": [
+      {
+        "text": "Oferta Especial - {keyword} - {promotion_text}",
+        "pinned": "HEADLINE_1"
+      },
+      {
+        "text": "Descuento en {keyword} - Solo Hoy",
+        "pinned": "HEADLINE_2"
+      },
+      {
+        "text": "{keyword} al Mejor Precio - Envío Gratis",
+        "pinned": "HEADLINE_3"
+      }
+    ],
+    "descriptions": [
+      {
+        "text": "Encuentra las mejores ofertas en {keyword}. Calidad garantizada.",
+        "order": 1
+      },
+      {
+        "text": "Ahorra tiempo y dinero con nuestros {keyword}. Envío 24h.",
+        "order": 2
+      }
+    ],
+    "display_paths": [
+      {
+        "text": "ofertas"
+      },
+      {
+        "text": "es"
+      }
+    ],
+    "final_urls": [
+      "https://example.com/landing-{keyword}"
+    ]
+  },
+  "variables": {
+    "keyword": "dynamic_keyword",
+    "promotion_text": "25% OFF",
+    "price_range": "€20-€50"
+  }
+}
+
+# TEMPLATE 2: ANUNCIOS DE COMPARACIÓN
+{
+  "template_name": "Search Ads - Comparison",
+  "template_type": "search_text_ad", 
+  "description": "Template para comparar productos/servicios",
+  "elements": {
+    "headlines": [
+      {
+        "text": "Comparar {category} - Top 3 Calidad-Precio",
+        "pinned": "HEADLINE_1"
+      },
+      {
+        "text": "Reseñas Reales {category} - Ver Resultados",
+        "pinned": "HEADLINE_2"
+      },
+      {
+        "text": "El Mejor {category} Según Usuarios",
+        "pinned": "HEADLINE_3"
+      }
+    ],
+    "descriptions": [
+      {
+        "text": "Descubre cuál {category} es mejor. Comparativas detalladas y opiniones de usuarios reales.",
+        "order": 1
+      },
+      {
+        "text": "Tabla comparativa, precios actualizados y consejos de compra. ¡Actualizado semanalmente!",
+        "order": 2
+      }
+    ],
+    "display_paths": [
+      {
+        "text": "comparar"
+      },
+      {
+        "text": "{category}"
+      }
+    ],
+    "final_urls": [
+      "https://example.com/comparativa-{category}"
+    ]
+  }
+}
+
+# TEMPLATE 3: ANUNCIOS DE TUTORIAL/GUÍA
+{
+  "template_name": "Search Ads - Tutorial",
+  "template_type": "search_text_ad",
+  "description": "Template para contenido educativo/tutorial",
+  "elements": {
+    "headlines": [
+      {
+        "text": "Aprender {topic} - Tutorial Completo 2025",
+        "pinned": "HEADLINE_1"
+      },
+      {
+        "text": "Guía Paso a Paso {topic} - Nivel Principiante",
+        "pinned": "HEADLINE_2"
+      },
+      {
+        "text": "Dominar {topic} - Curso Gratuito Online",
+        "pinned": "HEADLINE_3"
+      }
+    ],
+    "descriptions": [
+      {
+        "text": "Aprende {topic} desde cero con nuestro curso completo. Vídeos, ejercicios y certificación incluida.",
+        "order": 1
+      },
+      {
+        "text": "Más de 10,000 estudiantes ya dominan {topic}. ¡Únete ahora!",
+        "order": 2
+      }
+    ],
+    "display_paths": [
+      {
+        "text": "aprender"
+      },
+      {
+        "text": "{topic}"
+      }
+    ],
+    "final_urls": [
+      "https://example.com/curso-{topic}"
+    ]
+  }
+}
+
+# TEMPLATE 4: ANUNCIOS DE SERVICIOS
+{
+  "template_name": "Search Ads - Services",
+  "template_type": "search_text_ad",
+  "description": "Template para servicios profesionales",
+  "elements": {
+    "headlines": [
+      {
+        "text": "Servicio {service} Profesional - Presupuestos Gratis",
+        "pinned": "HEADLINE_1"
+      },
+      {
+        "text": "{service} en 24h - Mejor Precio Garantizado",
+        "pinned": "HEADLINE_2"
+      },
+      {
+        "text": "Empresa {service} - +10 Años Experiencia",
+        "pinned": "HEADLINE_3"
+      }
+    ],
+    "descriptions": [
+      {
+        "text": "Servicio profesional de {service} con garantía de calidad. Presupuesto sin compromiso.",
+        "order": 1
+      },
+      {
+        "text": "Equipos certificados, trabajadores especializados. ¡Contacta ahora y ahorra tiempo!",
+        "order": 2
+      }
+    ],
+    "display_paths": [
+      {
+        "text": "servicios"
+      },
+      {
+        "text": "{service}"
+      }
+    ],
+    "final_urls": [
+      "https://example.com/servicio-{service}"
+    ]
+  }
+}
+
+# TEMPLATE 5: ANUNCIOS DE EVENTOS
+{
+  "template_name": "Search Ads - Events",
+  "template_type": "search_text_ad",
+  "description": "Template para promoción de eventos",
+  "elements": {
+    "headlines": [
+      {
+        "text": "Evento {event_name} - Entradas Limitadas",
+        "pinned": "HEADLINE_1"
+      },
+      {
+        "text": "{event_name} {date} - Comprar Entradas",
+        "pinned": "HEADLINE_2"
+      },
+      {
+        "text": "No te Pierdas {event_name} - ¡Últimas Entradas!",
+        "pinned": "HEADLINE_3"
+      }
+    ],
+    "descriptions": [
+      {
+        "text": "Vive la experiencia {event_name}. Entretenimiento, networking y momentos únicos.",
+        "order": 1
+      },
+      {
+        "text": "Evento exclusivo en {location}. Entradas desde €{price}. ¡Reserva tu plaza ya!",
+        "order": 2
+      }
+    ],
+    "display_paths": [
+      {
+        "text": "eventos"
+      },
+      {
+        "text": "{event_name}"
+      }
+    ],
+    "final_urls": [
+      "https://example.com/evento-{event_name}"
+    ]
+  }
+}
+
+# TEMPLATE 6: ANUNCIOS LOCALES
+{
+  "template_name": "Search Ads - Local",
+  "template_type": "search_text_ad",
+  "description": "Template para negocios locales",
+  "elements": {
+    "headlines": [
+      {
+        "text": "{business_name} - Mejor de {location}",
+        "pinned": "HEADLINE_1"
+      },
+      {
+        "text": "{service} en {location} - Abierto Hoy",
+        "pinned": "HEADLINE_2"
+      },
+      {
+        "text": "Restaurante {cuisine} en {location}",
+        "pinned": "HEADLINE_3"
+      }
+    ],
+    "descriptions": [
+      {
+        "text": "Ven a {business_name}. La mejor {service} en {location}. Ven y disfruta de nuestra experiencia única.",
+        "order": 1
+      },
+      {
+        "text": "Abierto de {hours}. Llamada al {phone}. ¡Reserva tu mesa ya!",
+        "order": 2
+      }
+    ],
+    "display_paths": [
+      {
+        "text": "local"
+      },
+      {
+        "text": "{location}"
+      }
+    ],
+    "final_urls": [
+      "https://example.com/local-{location}"
+    ]
+  }
+}
+
+# VARIABLES GLOBALES DISPONIBLES
+# ==============================
+# - {keyword}: Palabra clave principal
+# - {category}: Categoría del producto/servicio
+# - {topic}: Tema del contenido educativo
+# - {service}: Servicio ofrecido
+# - {event_name}: Nombre del evento
+# - {date}: Fecha del evento
+# - {location}: Ubicación
+# - {business_name}: Nombre del negocio
+# - {cuisine}: Tipo de comida
+# - {hours}: Horarios
+# - {phone}: Teléfono
+# - {promotion_text}: Texto promocional
+# - {price}: Precio
+# - {price_range}: Rango de precios
+
+# CONFIGURACIÓN DE ANUNCIOS DE DISPLAY
+{
+  "display_ad_templates": {
+    "image_size": "1200x628",
+    "description": "Template para anuncios de display con imágenes",
+    "required_elements": [
+      "headline",
+      "description", 
+      "image_url",
+      "final_url"
+    ],
+    "optional_elements": [
+      "logo_url",
+      "call_to_action",
+      "price",
+      "discount_percentage"
+    ]
+  }
+}
+
+# CONFIGURACIÓN DE ANUNCIOS DE VIDEO
+{
+  "video_ad_templates": {
+    "description": "Template para anuncios de video YouTube",
+    "required_elements": [
+      "headline",
+      "description",
+      "video_url",
+      "final_url"
+    ],
+    "optional_elements": [
+      "thumbnail_url",
+      "duration",
+      "view_count"
+    ]
+  }
+}

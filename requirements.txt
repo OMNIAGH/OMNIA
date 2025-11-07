@@ -1,0 +1,69 @@
+# Requirements para NOESIS Prediction APIs
+fastapi==0.104.1
+uvicorn[standard]==0.24.0
+pydantic==2.5.0
+aioredis==2.0.1
+pyjwt==2.8.0
+pandas==2.1.3
+numpy==1.24.3
+scipy==1.11.4
+scikit-learn==1.3.2
+joblib==1.3.2
+aiohttp==3.9.1
+python-multipart==0.0.6
+python-jose[cryptography]==3.3.0
+passlib[bcrypt]==1.7.4
+redis==5.0.1
+httpx==0.25.2
+python-dotenv==1.0.0
+pydantic-settings==2.1.0
+
+# NOESIS - Sistema de Análisis de Tendencias
+# ============================================
+
+# Dependencias principales para análisis de tendencias
+pandas>=1.5.0
+numpy>=1.21.0
+matplotlib>=3.5.0
+seaborn>=0.11.0
+scipy>=1.8.0
+scikit-learn>=1.1.0
+statsmodels>=0.12.0
+
+# Modelos estadísticos para forecasting
+xgboost>=1.5.0
+lightgbm>=3.2.0
+# Prophet (opcional, instalar por separado si se necesita)
+# pip install prophet
+
+# Visualización avanzada
+plotly>=5.0.0  # Opcional para dashboards interactivos
+
+# Utilidades adicionales
+python-dateutil>=2.8.0
+pytz>=2021.1
+
+# Dependencias de desarrollo (opcional)
+jupyter>=1.0.0
+pytest>=6.0.0
+black>=21.0.0
+flake8>=4.0.0
+
+# Dependencias para MIDAS Google OPAL
+# ===================================
+google-ads==21.0.0
+requests>=2.28.0
+asyncio-throttle>=1.0.2
+sqlalchemy>=1.4.0
+python-dateutil>=2.8.0
+
+# Notas de instalación para forecasting:
+# - Para Prophet: pip install prophet (puede requerir gcc)
+# - Para Windows: Instalar Microsoft Visual C++ Build Tools
+# - Para Linux: sudo apt-get install build-essential
+# - Para Mac: xcode-select --install
+
+# INSTALACIÓN DE GOOGLE ADS:
+# 1. Obtener Developer Token de Google Ads
+# 2. Configurar OAuth2 en Google Cloud Console
+# 3. Instalar credenciales en google_ads_config.json

@@ -1,0 +1,3 @@
+2025-11-07 02:17:42,916 - OmnIAEngineCoordinator - WARNING - ⚠️  Redis no disponible: Error 111 connecting to localhost:6379. Connection refused.
+2025-11-07 02:17:42,938 - OmnIAEngineCoordinator - INFO - ✅ SQLite inicializado
+2025-11-07 02:17:42,939 - OmnIAEngineCoordinator - INFO - 🚀 OMNIA Engine Coordinator inicializado

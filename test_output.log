@@ -1,0 +1,82 @@
+🚀 Iniciando pruebas del sistema OMNIA Enhanced 10x...
+\n📋 Ejecutando Test 1: Consulta Simple Básica
+------------------------------------------------------------
+   ✅ PROCESADO EXITOSAMENTE
+   🧠 Análisis: factual_structured
+   🤖 IA seleccionada: gemini
+   🎯 Confianza: 0.8
+   🔐 Puntuación de seguridad: 0.95
+   ⏱️  Tiempo de procesamiento: 0.000s
+   💭 Razonamiento: Query analysis: 5 words, method: factual_structured
+   🤖 Respuesta: **Análisis Factual-Estructurado (Gemini)**\n\nConsulta: ¿Qué es la inteligencia artificial?\n\n**Dat......
+   📝 Request ID: d8e70ed1-21f0-49af-a1e7-16bb531a2e72
+\n📋 Ejecutando Test 2: Consulta Técnica Compleja
+------------------------------------------------------------
+   ✅ PROCESADO EXITOSAMENTE
+   🧠 Análisis: logical_mathematical
+   🤖 IA seleccionada: openai
+   🎯 Confianza: 1.0
+   🔐 Puntuación de seguridad: 0.95
+   ⏱️  Tiempo de procesamiento: 0.000s
+   💭 Razonamiento: Query analysis: 15 words, method: logical_mathematical
+   🤖 Respuesta: **Análisis Lógico-Matemático (OpenAI)**\n\nAnálisis estructurado de: Explícame cómo funcionan las AP......
+   📝 Request ID: e828023c-3647-4cac-ab47-8e1bb2722eb6
+\n📋 Ejecutando Test 3: Consulta Creativa Contextual
+------------------------------------------------------------
+   ✅ PROCESADO EXITOSAMENTE
+   🧠 Análisis: logical_mathematical
+   🤖 IA seleccionada: openai
+   🎯 Confianza: 0.8
+   🔐 Puntuación de seguridad: 0.95
+   ⏱️  Tiempo de procesamiento: 0.000s
+   💭 Razonamiento: Query analysis: 12 words, method: logical_mathematical
+   🤖 Respuesta: **Análisis Lógico-Matemático (OpenAI)**\n\nAnálisis estructurado de: Describe las implicaciones soci......
+   📝 Request ID: f6f3048d-bfab-47c5-b25b-13e5bf16daee
+\n📋 Ejecutando Test 4: Consulta Factual Estructurada
+------------------------------------------------------------
+   ✅ PROCESADO EXITOSAMENTE
+   🧠 Análisis: logical_mathematical
+   🤖 IA seleccionada: openai
+   🎯 Confianza: 1.0
+   🔐 Puntuación de seguridad: 0.95
+   ⏱️  Tiempo de procesamiento: 0.000s
+   💭 Razonamiento: Query analysis: 13 words, method: logical_mathematical
+   🤖 Respuesta: **Análisis Lógico-Matemático (OpenAI)**\n\nAnálisis estructurado de: ¿Cuáles son las principales dif......
+   📝 Request ID: 409ee11c-9016-4ca4-883e-daad9b5b3cc8
+\n📋 Ejecutando Test 5: Test de Seguridad - Intento de Inyección
+------------------------------------------------------------
+   🔒 BLOQUEADO por SHIELD
+   🛡️  Motivo: prompt_injection_attempt
+   ⚠️  Nivel de amenaza: HIGH
+   📝 Request ID: d720314d-3477-4afa-b4ee-6bdd706dc7fe
+\n📋 Ejecutando Test 6: Consulta de Memoria y Contexto
+------------------------------------------------------------
+   ✅ PROCESADO EXITOSAMENTE
+   🧠 Análisis: factual_structured
+   🤖 IA seleccionada: gemini
+   🎯 Confianza: 0.8
+   🔐 Puntuación de seguridad: 0.95
+   ⏱️  Tiempo de procesamiento: 0.000s
+   💭 Razonamiento: Query analysis: 6 words, method: factual_structured
+   🤖 Respuesta: **Análisis Factual-Estructurado (Gemini)**\n\nConsulta: ¿Recuerdas nuestra conversación anterior sob......
+   📝 Request ID: ea71a419-26d8-416e-9595-15e5cf1e58ab
+\n======================================================================
+📊 RESUMEN DE PRUEBAS OMNIA ENHANCED 10x
+======================================================================
+✅ Tests Exitosos: 5
+🔒 Tests Bloqueados: 1
+📈 Total de Tests: 6
+🎯 Tasa de Éxito: 83.3%
+🏆 Estado del Sistema: FULLY_OPERATIONAL
+\n🔍 COMPONENTES VERIFICADOS:
+   ✅ MÓDULO JUEZ: Análisis semántico operativo
+   ✅ SHIELD: Validación perimetral funcional
+   ✅ Sistema de Ruteo: Selección inteligente de IA
+   ✅ Prompts Especializados: Respuestas contextuales
+   ✅ Metadatos: Transparencia completa
+   ✅ Seguridad: Detección de amenazas activa
+\n🎉 OMNIA ENHANCED 10x - SISTEMA COMPLETAMENTE FUNCIONAL
+   🚀 Listo para producción
+   🛡️  Seguridad empresarial implementada
+   🧠 Inteligencia aumentada 10x activada
+\n📄 Resultados detallados guardados en: omnia_enhanced_10x_test_results.json

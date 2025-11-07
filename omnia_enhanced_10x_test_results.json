@@ -1,0 +1,336 @@
+{
+  "timestamp": "2025-11-06T20:00:25.311281",
+  "system": "OMNIA Enhanced 10x",
+  "version": "1.0",
+  "tests": [
+    {
+      "test_id": 1,
+      "name": "Consulta Simple Básica",
+      "status": "SUCCESS",
+      "result": {
+        "status": "SUCCESS",
+        "request_id": "d8e70ed1-21f0-49af-a1e7-16bb531a2e72",
+        "user_id": "test_user_basic",
+        "session_id": "test_session_1",
+        "timestamp": "2025-11-06T20:00:25.311472",
+        "response": {
+          "content": "**Análisis Factual-Estructurado (Gemini)**\\n\\nConsulta: ¿Qué es la inteligencia artificial?\\n\\n**Datos objetivos:** Información verificada\\n**Estructura sistemática:** Análisis comparativo\\n**Resultado:** Síntesis basada en evidencia",
+          "model": "gemini",
+          "prompt_type": "factual_structured"
+        },
+        "metadata": {
+          "request_id": "d8e70ed1-21f0-49af-a1e7-16bb531a2e72",
+          "analysis_method": "factual_structured",
+          "ai_selected": "gemini",
+          "confidence": 0.8,
+          "security_score": 0.95,
+          "processing_time": 0.0001552104949951172,
+          "complexity": "simple",
+          "word_count": 5,
+          "reasoning": "Query analysis: 5 words, method: factual_structured",
+          "timestamp": "2025-11-06T20:00:25.311467"
+        },
+        "omnia_context": {
+          "shield": {
+            "blocked": false,
+            "threat_level": "LOW"
+          },
+          "security": {
+            "protocol": "OMNIA_10X",
+            "version": "1.0",
+            "active_layers": [
+              "SHIELD",
+              "GUARDIAN",
+              "SENTINEL",
+              "WATCHER"
+            ]
+          },
+          "judger": {
+            "active": true,
+            "method": "factual_structured",
+            "confidence": 0.8
+          },
+          "routing": {
+            "enabled": true,
+            "ai_selected": "gemini",
+            "optimization": "specialized_prompts"
+          }
+        },
+        "enhanced_flags": {
+          "security_valid": true,
+          "judger_active": true,
+          "routing_enabled": true,
+          "specialized_prompts": true
+        }
+      }
+    },
+    {
+      "test_id": 2,
+      "name": "Consulta Técnica Compleja",
+      "status": "SUCCESS",
+      "result": {
+        "status": "SUCCESS",
+        "request_id": "e828023c-3647-4cac-ab47-8e1bb2722eb6",
+        "user_id": "test_user_technical",
+        "session_id": "test_session_2",
+        "timestamp": "2025-11-06T20:00:25.311528",
+        "response": {
+          "content": "**Análisis Lógico-Matemático (OpenAI)**\\n\\nAnálisis estructurado de: Explícame cómo funcionan las APIs REST y sus mejores prácticas de implementación para aplicaciones e...\\n\\n1. **Concepto clave**: Información fundamental\\n2. **Desarrollo técnico**: Explicación detallada\\n3. **Conclusión práctica**: Aplicación real",
+          "model": "openai",
+          "prompt_type": "logical_mathematical"
+        },
+        "metadata": {
+          "request_id": "e828023c-3647-4cac-ab47-8e1bb2722eb6",
+          "analysis_method": "logical_mathematical",
+          "ai_selected": "openai",
+          "confidence": 1.0,
+          "security_score": 0.95,
+          "processing_time": 2.4080276489257812e-05,
+          "complexity": "complex",
+          "word_count": 15,
+          "reasoning": "Query analysis: 15 words, method: logical_mathematical",
+          "timestamp": "2025-11-06T20:00:25.311525"
+        },
+        "omnia_context": {
+          "shield": {
+            "blocked": false,
+            "threat_level": "LOW"
+          },
+          "security": {
+            "protocol": "OMNIA_10X",
+            "version": "1.0",
+            "active_layers": [
+              "SHIELD",
+              "GUARDIAN",
+              "SENTINEL",
+              "WATCHER"
+            ]
+          },
+          "judger": {
+            "active": true,
+            "method": "logical_mathematical",
+            "confidence": 1.0
+          },
+          "routing": {
+            "enabled": true,
+            "ai_selected": "openai",
+            "optimization": "specialized_prompts"
+          }
+        },
+        "enhanced_flags": {
+          "security_valid": true,
+          "judger_active": true,
+          "routing_enabled": true,
+          "specialized_prompts": true
+        }
+      }
+    },
+    {
+      "test_id": 3,
+      "name": "Consulta Creativa Contextual",
+      "status": "SUCCESS",
+      "result": {
+        "status": "SUCCESS",
+        "request_id": "f6f3048d-bfab-47c5-b25b-13e5bf16daee",
+        "user_id": "test_user_creative",
+        "session_id": "test_session_3",
+        "timestamp": "2025-11-06T20:00:25.311563",
+        "response": {
+          "content": "**Análisis Lógico-Matemático (OpenAI)**\\n\\nAnálisis estructurado de: Describe las implicaciones sociales de la IA de forma creativa y reflexiva...\\n\\n1. **Concepto clave**: Información fundamental\\n2. **Desarrollo técnico**: Explicación detallada\\n3. **Conclusión práctica**: Aplicación real",
+          "model": "openai",
+          "prompt_type": "logical_mathematical"
+        },
+        "metadata": {
+          "request_id": "f6f3048d-bfab-47c5-b25b-13e5bf16daee",
+          "analysis_method": "logical_mathematical",
+          "ai_selected": "openai",
+          "confidence": 0.8,
+          "security_score": 0.95,
+          "processing_time": 1.2636184692382812e-05,
+          "complexity": "complex",
+          "word_count": 12,
+          "reasoning": "Query analysis: 12 words, method: logical_mathematical",
+          "timestamp": "2025-11-06T20:00:25.311560"
+        },
+        "omnia_context": {
+          "shield": {
+            "blocked": false,
+            "threat_level": "LOW"
+          },
+          "security": {
+            "protocol": "OMNIA_10X",
+            "version": "1.0",
+            "active_layers": [
+              "SHIELD",
+              "GUARDIAN",
+              "SENTINEL",
+              "WATCHER"
+            ]
+          },
+          "judger": {
+            "active": true,
+            "method": "logical_mathematical",
+            "confidence": 0.8
+          },
+          "routing": {
+            "enabled": true,
+            "ai_selected": "openai",
+            "optimization": "specialized_prompts"
+          }
+        },
+        "enhanced_flags": {
+          "security_valid": true,
+          "judger_active": true,
+          "routing_enabled": true,
+          "specialized_prompts": true
+        }
+      }
+    },
+    {
+      "test_id": 4,
+      "name": "Consulta Factual Estructurada",
+      "status": "SUCCESS",
+      "result": {
+        "status": "SUCCESS",
+        "request_id": "409ee11c-9016-4ca4-883e-daad9b5b3cc8",
+        "user_id": "test_user_factual",
+        "session_id": "test_session_4",
+        "timestamp": "2025-11-06T20:00:25.311598",
+        "response": {
+          "content": "**Análisis Lógico-Matemático (OpenAI)**\\n\\nAnálisis estructurado de: ¿Cuáles son las principales diferencias entre machine learning, deep learning y reinforcement learni...\\n\\n1. **Concepto clave**: Información fundamental\\n2. **Desarrollo técnico**: Explicación detallada\\n3. **Conclusión práctica**: Aplicación real",
+          "model": "openai",
+          "prompt_type": "logical_mathematical"
+        },
+        "metadata": {
+          "request_id": "409ee11c-9016-4ca4-883e-daad9b5b3cc8",
+          "analysis_method": "logical_mathematical",
+          "ai_selected": "openai",
+          "confidence": 1.0,
+          "security_score": 0.95,
+          "processing_time": 1.7642974853515625e-05,
+          "complexity": "complex",
+          "word_count": 13,
+          "reasoning": "Query analysis: 13 words, method: logical_mathematical",
+          "timestamp": "2025-11-06T20:00:25.311596"
+        },
+        "omnia_context": {
+          "shield": {
+            "blocked": false,
+            "threat_level": "LOW"
+          },
+          "security": {
+            "protocol": "OMNIA_10X",
+            "version": "1.0",
+            "active_layers": [
+              "SHIELD",
+              "GUARDIAN",
+              "SENTINEL",
+              "WATCHER"
+            ]
+          },
+          "judger": {
+            "active": true,
+            "method": "logical_mathematical",
+            "confidence": 1.0
+          },
+          "routing": {
+            "enabled": true,
+            "ai_selected": "openai",
+            "optimization": "specialized_prompts"
+          }
+        },
+        "enhanced_flags": {
+          "security_valid": true,
+          "judger_active": true,
+          "routing_enabled": true,
+          "specialized_prompts": true
+        }
+      }
+    },
+    {
+      "test_id": 5,
+      "name": "Test de Seguridad - Intento de Inyección",
+      "status": "BLOCKED",
+      "result": {
+        "status": "BLOCKED",
+        "request_id": "d720314d-3477-4afa-b4ee-6bdd706dc7fe",
+        "user_id": "test_user_security",
+        "timestamp": "2025-11-06T20:00:25.311617",
+        "security_response": {
+          "status": "BLOCKED",
+          "reason": "prompt_injection_attempt",
+          "threat_level": "HIGH",
+          "shield_layer": "ACTIVE"
+        }
+      }
+    },
+    {
+      "test_id": 6,
+      "name": "Consulta de Memoria y Contexto",
+      "status": "SUCCESS",
+      "result": {
+        "status": "SUCCESS",
+        "request_id": "ea71a419-26d8-416e-9595-15e5cf1e58ab",
+        "user_id": "test_user_memory",
+        "session_id": "test_session_6",
+        "timestamp": "2025-11-06T20:00:25.311643",
+        "response": {
+          "content": "**Análisis Factual-Estructurado (Gemini)**\\n\\nConsulta: ¿Recuerdas nuestra conversación anterior sobre tecnología?\\n\\n**Datos objetivos:** Información verificada\\n**Estructura sistemática:** Análisis comparativo\\n**Resultado:** Síntesis basada en evidencia",
+          "model": "gemini",
+          "prompt_type": "factual_structured"
+        },
+        "metadata": {
+          "request_id": "ea71a419-26d8-416e-9595-15e5cf1e58ab",
+          "analysis_method": "factual_structured",
+          "ai_selected": "gemini",
+          "confidence": 0.8,
+          "security_score": 0.95,
+          "processing_time": 1.1682510375976562e-05,
+          "complexity": "simple",
+          "word_count": 6,
+          "reasoning": "Query analysis: 6 words, method: factual_structured",
+          "timestamp": "2025-11-06T20:00:25.311641"
+        },
+        "omnia_context": {
+          "shield": {
+            "blocked": false,
+            "threat_level": "LOW"
+          },
+          "security": {
+            "protocol": "OMNIA_10X",
+            "version": "1.0",
+            "active_layers": [
+              "SHIELD",
+              "GUARDIAN",
+              "SENTINEL",
+              "WATCHER"
+            ]
+          },
+          "judger": {
+            "active": true,
+            "method": "factual_structured",
+            "confidence": 0.8
+          },
+          "routing": {
+            "enabled": true,
+            "ai_selected": "gemini",
+            "optimization": "specialized_prompts"
+          }
+        },
+        "enhanced_flags": {
+          "security_valid": true,
+          "judger_active": true,
+          "routing_enabled": true,
+          "specialized_prompts": true
+        }
+      }
+    }
+  ],
+  "summary": {
+    "total_tests": 6,
+    "successful": 5,
+    "blocked": 1,
+    "success_rate": 83.33333333333334,
+    "system_status": "FULLY_OPERATIONAL"
+  }
+}

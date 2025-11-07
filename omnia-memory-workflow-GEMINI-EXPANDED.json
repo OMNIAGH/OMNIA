@@ -1,0 +1,443 @@
+{
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "omnia-ultimate-memory",
+        "options": {
+          "rawBody": true
+        }
+      },
+      "id": "d1081c4d-5014-4cfc-bece-30a38206fe47",
+      "name": "OMNIA Webhook with Memory",
+      "type": "n8n-nodes-base.webhook",
+      "position": [-2368, 224],
+      "typeVersion": 2.1,
+      "webhookId": "ab90ee17-a0f3-49a1-b295-9772bc2f3ce0"
+    },
+    {
+      "parameters": {
+        "jsCode": "// OMNIA Ultimate Protocol with Memory - Procesa entrada y prepara contexto\nconst items = $input.all();\n\nfor (const item of items) {\n  // Generar ID único para esta request\n  item.json.requestId = item.json.requestId || Date.now().toString() + Math.random().toString(36).substr(2, 9);\n  item.json.userId = item.json.userId || 'user_' + Math.random().toString(36).substr(2, 9);\n  item.json.timestamp = new Date().toISOString();\n  \n  // Extraer mensaje del usuario del body raw\n  try {\n    if (typeof item.json.body === 'string') {\n      const parsedBody = JSON.parse(item.json.body);\n      item.json.userMessage = parsedBody.message || parsedBody.text || item.json.body;\n    } else {\n      item.json.userMessage = item.json.body.message || item.json.body.text || 'Test message';\n    }\n  } catch (e) {\n    item.json.userMessage = item.json.body || 'Test message';\n  }\n  \n  // Inicializar estructura de memoria\n  item.json.memory = {\n    context: [],\n    sessionData: {},\n    userPreferences: {}\n  };\n  \n  item.json.fastLoopTriggered = false;\n  item.json.modelResponses = [];\n}\n\nreturn items;"
+      },
+      "id": "89f130c2-edfc-43a2-97ba-3f544c77b6bc",
+      "name": "Ultimate Protocol with Memory",
+      "type": "n8n-nodes-base.code",
+      "position": [-2144, 224],
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "jsCode": "// Context Retriever - Recupera contexto de conversaciones anteriores\nconst items = $input.all();\n\nfor (const item of items) {\n  const userId = item.json.userId;\n  const requestId = item.json.requestId;\n  \n  // Simular recuperación de contexto (en producción esto vendría de una base de datos)\n  item.json.memory.context = [\n    {\n      role: 'system',\n      content: `Eres un asistente inteligente con capacidad de memoria. Usuario: ${userId}. Contexto de conversación anterior.`,\n      timestamp: item.json.timestamp\n    }\n  ];\n  \n  // Preparar mensaje del usuario con contexto\n  const userMessage = {\n    role: 'user',\n    content: item.json.userMessage,\n    timestamp: item.json.timestamp\n  };\n  \n  item.json.contextMessages = [...item.json.memory.context, userMessage];\n  \n  console.log(`Context retrieved for user ${userId}, request ${requestId}`);\n}\n\nreturn items;"
+      },
+      "id": "d7b03015-1c8c-4527-8ac4-2f637de1962b",
+      "name": "Context Retriever",
+      "type": "n8n-nodes-base.code",
+      "position": [-1920, 224],
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "jsCode": "// Ultimate Coordinator - Coordina y valida el contexto antes de enviar a modelos\nconst items = $input.all();\n\nfor (const item of items) {\n  const messages = item.json.contextMessages || [];\n  \n  // Validar que tenemos mensajes válidos\n  if (messages.length === 0) {\n    item.json.error = 'No context messages available';\n    return items;\n  }\n  \n  // Preparar datos para los diferentes modelos\n  item.json.modelAData = {\n    requestId: item.json.requestId,\n    userId: item.json.userId,\n    messages: messages,\n    model: 'gpt-3.5-turbo',\n    maxTokens: 1000\n  };\n  \n  item.json.modelBData = {\n    requestId: item.json.requestId,\n    userId: item.json.userId,\n    messages: messages,\n    model: 'claude-3-5-sonnet-20241022',\n    maxTokens: 1024\n  };\n  \n  // Model C ya no se usa - eliminado para hacer espacio a Gemini\n  // Se mantiene por compatibilidad pero no se conecta\n  item.json.modelCData = {\n    requestId: item.json.requestId,\n    userId: item.json.userId,\n    messages: messages,\n    model: 'gpt-3.5-turbo',\n    maxTokens: 800,\n    active: false\n  };\n  \n  // NUEVO: Model D - Google Gemini\n  item.json.modelDData = {\n    requestId: item.json.requestId,\n    userId: item.json.userId,\n    messages: messages,\n    model: 'gemini-pro',\n    maxTokens: 1024,\n    temperature: 0.6\n  };\n  \n  // Marcar inicio del procesamiento multi-modelo\n  item.json.coordinatorStep = 'models_invoked';\n  \n  console.log(`Coordinating ${messages.length} messages for user ${item.json.userId} with 3 models: OpenAI, Claude, Gemini`);\n}\n\nreturn items;"
+      },
+      "id": "25691a4f-f8a8-4855-a88d-4c78ec1efe1c",
+      "name": "Ultimate Coordinator with Memory",
+      "type": "n8n-nodes-base.code",
+      "position": [-1696, 224],
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.openai.com/v1/chat/completions",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "openAiApi",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "X-Request-ID",
+              "value": "={{ $json.requestId }}-modelA"
+            },
+            {
+              "name": "X-User-ID",
+              "value": "={{ $json.userId }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "model",
+              "value": "gpt-3.5-turbo"
+            },
+            {
+              "name": "messages",
+              "value": "={{ JSON.stringify($json.modelAData.messages) }}"
+            },
+            {
+              "name": "max_tokens",
+              "value": "1000"
+            },
+            {
+              "name": "temperature",
+              "value": "0.7"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 8000
+        }
+      },
+      "id": "4833c6dc-fbf3-42f8-b028-f116d3f282ed",
+      "name": "Model A - OpenAI GPT-3.5",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [-1472, 32],
+      "typeVersion": 4.3,
+      "credentials": {
+        "openAiApi": {
+          "id": "7mCIXNvGfr67VLPf",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.anthropic.com/v1/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "x-api-key",
+              "value": "e5362baf-c777-4d57-a609-6eaf1f9e87f6"
+            },
+            {
+              "name": "anthropic-version",
+              "value": "2023-06-01"
+            },
+            {
+              "name": "X-Request-ID",
+              "value": "={{ $json.requestId }}-modelB"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "model",
+              "value": "claude-3-5-sonnet-20241022"
+            },
+            {
+              "name": "max_tokens",
+              "value": "1024"
+            },
+            {
+              "name": "messages",
+              "value": "={{ JSON.stringify($json.modelBData.messages) }}"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 12000
+        }
+      },
+      "id": "928f2fa8-fc3c-4e1c-8123-c4303dd6816f",
+      "name": "Model B - Claude 3.5 Sonnet",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [-1472, 224],
+      "typeVersion": 4.3
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "X-Request-ID",
+              "value": "={{ $json.requestId }}-modelD"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "key",
+              "value": "AIzaSyBfNfLCr0AIJbbp7zi4munvfmIof7CIMvs"
+            },
+            {
+              "name": "contents",
+              "value": "={{ JSON.stringify($json.modelDData.messages.map(msg => ({ role: msg.role, parts: [{ text: msg.content }] }))) }}"
+            },
+            {
+              "name": "generationConfig",
+              "value": "={{ JSON.stringify({ maxOutputTokens: $json.modelDData.maxTokens, temperature: $json.modelDData.temperature }) }}"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 10000
+        }
+      },
+      "id": "gemini-node-new",
+      "name": "Model D - Google Gemini Pro",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [-1472, 416],
+      "typeVersion": 4.3
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.openai.com/v1/chat/completions",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "openAiApi",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "X-Request-ID",
+              "value": "={{ $json.requestId }}-modelC"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "model",
+              "value": "gpt-3.5-turbo"
+            },
+            {
+              "name": "messages",
+              "value": "={{ JSON.stringify($json.modelCData.messages) }}"
+            },
+            {
+              "name": "max_tokens",
+              "value": "800"
+            },
+            {
+              "name": "temperature",
+              "value": "0.5"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 15000
+        }
+      },
+      "id": "8e35c544-9f46-4292-b5d3-ee561b05637b",
+      "name": "Model C - Context Aware (DISABLED)",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [-1472, 608],
+      "typeVersion": 4.3,
+      "disabled": true,
+      "credentials": {
+        "openAiApi": {
+          "id": "7mCIXNvGfr67VLPf",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Fast-Loop Memory Intelligence - Procesa respuestas de modelos en paralelo\nconst items = $input.all();\n\nfor (const item of items) {\n  const requestId = item.json.requestId;\n  const userId = item.json.userId;\n  \n  // Procesar respuesta de OpenAI (Model A)\n  if (item.json.choices && item.json.choices[0]) {\n    item.json.modelResponse = {\n      model: 'gpt-3.5-turbo',\n      content: item.json.choices[0].message.content,\n      usage: item.json.usage,\n      timestamp: new Date().toISOString()\n    };\n    \n    // Determinar si activar fast-loop basado en la calidad de la respuesta\n    const content = item.json.modelResponse.content.toLowerCase();\n    item.json.fastLoopTriggered = content.includes('uncertain') || content.includes('need more') || content.includes('unclear');\n  }\n  \n  // Procesar respuesta de Claude (Model B)\n  if (item.json.content && item.json.content[0]) {\n    item.json.modelResponse = {\n      model: 'claude-3-5-sonnet',\n      content: item.json.content[0].text,\n      usage: {},\n      timestamp: new Date().toISOString()\n    };\n    \n    const content = item.json.modelResponse.content.toLowerCase();\n    item.json.fastLoopTriggered = content.includes('uncertain') || content.includes('need more') || content.includes('unclear');\n  }\n  \n  // NUEVO: Procesar respuesta de Google Gemini (Model D)\n  if (item.json.candidates && item.json.candidates[0] && item.json.candidates[0].content) {\n    item.json.modelResponse = {\n      model: 'gemini-pro',\n      content: item.json.candidates[0].content.parts[0].text,\n      usage: item.json.usageMetadata || {},\n      timestamp: new Date().toISOString()\n    };\n    \n    const content = item.json.modelResponse.content.toLowerCase();\n    item.json.fastLoopTriggered = content.includes('uncertain') || content.includes('need more') || content.includes('unclear');\n  }\n  \n  // Agregar metadatos de memoria\n  item.json.memory.sessionData.lastRequest = {\n    requestId,\n    userId,\n    timestamp: new Date().toISOString(),\n    responseQuality: item.json.fastLoopTriggered ? 'needs_refinement' : 'satisfactory',\n    activeModels: ['openai-gpt-3.5', 'claude-3.5-sonnet', 'gemini-pro']\n  };\n  \n  console.log(`Fast-loop intelligence processed for ${userId}: fastLoopTriggered=${item.json.fastLoopTriggered} using ${item.json.modelResponse?.model}`);\n}\n\nreturn items;"
+      },
+      "id": "b492de36-713f-488c-a7e4-e0d224d454e5",
+      "name": "Fast-Loop Memory Intelligence",
+      "type": "n8n-nodes-base.code",
+      "position": [-1248, 230],
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "leftValue": "={{ $json.fastLoopTriggered }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "true"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "5b3afe38-ef77-45b1-969e-d71f1337cae7",
+      "name": "Memory Fast-Loop Gate",
+      "type": "n8n-nodes-base.if",
+      "position": [-1024, 230],
+      "typeVersion": 2.2
+    },
+    {
+      "parameters": {
+        "jsCode": "// Provisional Memory Response - Respuesta rápida mientras se procesa la memoria\nconst items = $input.all();\n\nfor (const item of items) {\n  item.json.provisionalResponse = {\n    content: 'He recibido tu mensaje y estoy procesando la información con mis 3 IAs más potentes (OpenAI, Claude y Gemini). Esto puede tomar un momento...',\n    type: 'provisional',\n    timestamp: new Date().toISOString(),\n    requestId: item.json.requestId\n  };\n  \n  item.json.memory.pendingActions = ['deep_processing', 'context_verification', 'multi_ai_synthesis'];\n  \n  console.log(`Provisional response generated for ${item.json.userId} with 3-model processing`);\n}\n\nreturn items;"
+      },
+      "id": "b6477c14-1017-4d21-adb0-7a9453e50b51",
+      "name": "Provisional Memory Response",
+      "type": "n8n-nodes-base.code",
+      "position": [-352, 130],
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "jsCode": "// Memory Ultimate Evaluation - Evaluación profunda de la respuesta del modelo\nconst items = $input.all();\n\nfor (const item of items) {\n  const response = item.json.modelResponse;\n  \n  if (!response) {\n    item.json.evaluation = {\n      quality: 'error',\n      confidence: 0,\n      issues: ['no_response_available']\n    };\n    return items;\n  }\n  \n  // Evaluar calidad de la respuesta\n  const content = response.content.toLowerCase();\n  const wordCount = response.content.split(' ').length;\n  \n  let quality = 'good';\n  let confidence = 0.8;\n  const issues = [];\n  \n  // Heurísticas de evaluación\n  if (wordCount < 10) {\n    quality = 'too_short';\n    confidence = 0.3;\n    issues.push('response_too_short');\n  }\n  \n  if (content.includes('i cannot') || content.includes('i am unable')) {\n    quality = 'refused';\n    confidence = 0.1;\n    issues.push('model_refused_request');\n  }\n  \n  if (content.includes('sorry') && content.includes('cannot')) {\n    quality = 'apologetic';\n    confidence = 0.2;\n    issues.push('apology_detected');\n  }\n  \n  // Determinar si necesita verificación externa\n  const needsVerification = quality !== 'good' || confidence < 0.6;\n  \n  item.json.evaluation = {\n    quality,\n    confidence,\n    issues,\n    wordCount,\n    needsVerification,\n    modelUsed: response.model\n  };\n  \n  item.json.memory.evaluation = item.json.evaluation;\n  \n  console.log(`Evaluation complete for ${item.json.userId}: quality=${quality}, confidence=${confidence}, model=${response.model}`);\n}\n\nreturn items;"
+      },
+      "id": "01171a0c-4bba-4a67-9354-7814e7ab174f",
+      "name": "Memory Ultimate Evaluation",
+      "type": "n8n-nodes-base.code",
+      "position": [-800, 330],
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "url": "https://serpapi.com/search",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "q",
+              "value": "={{ $json.userMessage }} verification test"
+            },
+            {
+              "name": "api_key",
+              "value": "e5362baf-c777-4d57-a609-6eaf1f9e87f6"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-Request-ID",
+              "value": "={{ $json.requestId }}-verification"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 8000
+        }
+      },
+      "id": "85107941-1ba5-4c96-b2a8-d3ae0b0e3eea",
+      "name": "Memory External Verification",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [-576, 330],
+      "typeVersion": 4.3
+    },
+    {
+      "parameters": {
+        "jsCode": "// Memory Ultimate Synthesis - Síntesis final de toda la información procesada\nconst items = $input.all();\n\nfor (const item of items) {\n  const originalResponse = item.json.modelResponse;\n  const evaluation = item.json.evaluation;\n  const verification = item.json;\n  \n  // Combinar toda la información\n  item.json.finalSynthesis = {\n    originalResponse: originalResponse ? originalResponse.content : 'No response available',\n    evaluation: evaluation,\n    verification: verification.organic_results ? verification.organic_results.slice(0, 3) : [],\n    confidence: evaluation ? evaluation.confidence : 0,\n    timestamp: new Date().toISOString(),\n    memoryContext: item.json.memory,\n    modelsProcessed: originalResponse ? [originalResponse.model] : []\n  };\n  \n  // Generar respuesta final\n  if (evaluation && evaluation.quality === 'good' && evaluation.confidence > 0.7) {\n    item.json.finalResponse = originalResponse.content;\n  } else if (evaluation && evaluation.quality === 'refused') {\n    item.json.finalResponse = 'Lo siento, no puedo ayudarte con esa solicitud específica.';\n  } else {\n    item.json.finalResponse = 'He procesado tu solicitud con mis 3 IAs más potentes. Aquí está mi respuesta: ' + (originalResponse ? originalResponse.content : 'No response available');\n  }\n  \n  item.json.synthesisComplete = true;\n  \n  console.log(`Synthesis complete for ${item.json.userId} with confidence ${evaluation?.confidence || 0} using ${originalResponse?.model}`);\n}\n\nreturn items;"
+      },
+      "id": "e0d074ff-1a47-4ed3-830d-728aa2a4d546",
+      "name": "Memory Ultimate Synthesis",
+      "type": "n8n-nodes-base.code",
+      "position": [-352, 330],
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "jsCode": "// Memory Response Manager - Gestiona la respuesta final y el flujo de datos\nconst items = $input.all();\n\nfor (const item of items) {\n  // Preparar respuesta final basada en el tipo de entrada\n  if (item.json.provisionalResponse) {\n    // Respuesta provisional\n    item.json.response = item.json.provisionalResponse;\n    item.json.responseType = 'provisional';\n  } else if (item.json.finalResponse) {\n    // Respuesta final procesada\n    item.json.response = {\n      content: item.json.finalResponse,\n      type: 'final',\n      confidence: item.json.evaluation ? item.json.evaluation.confidence : 0.5,\n      model: item.json.modelResponse ? item.json.modelResponse.model : 'unknown',\n      timestamp: new Date().toISOString()\n    };\n    item.json.responseType = 'final';\n  } else {\n    // Respuesta de error\n    item.json.response = {\n      content: 'Error procesando la solicitud',\n      type: 'error',\n      timestamp: new Date().toISOString()\n    };\n    item.json.responseType = 'error';\n  }\n  \n  // Metadatos de la respuesta\n  item.json.metadata = {\n    requestId: item.json.requestId,\n    userId: item.json.userId,\n    processingTime: Date.now() - new Date(item.json.timestamp).getTime(),\n    memoryUsed: !!item.json.memory,\n    modelsInvoked: ['gpt-3.5-turbo', 'claude-3-5-sonnet-20241022', 'gemini-pro'],\n    responseType: item.json.responseType\n  };\n  \n  console.log(`Response managed for ${item.json.userId}: type=${item.json.responseType} with ${item.json.metadata.modelsInvoked.length} models`);\n}\n\nreturn items;"
+      },
+      "id": "dd072ef0-4028-467d-bc6e-5971442f4e25",
+      "name": "Memory Response Manager",
+      "type": "n8n-nodes-base.code",
+      "position": [-128, 230],
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "jsCode": "// Memory Updater & Indexer - Actualiza la memoria del sistema con la nueva información\nconst items = $input.all();\n\nfor (const item of items) {\n  const userId = item.json.userId;\n  const requestId = item.json.requestId;\n  \n  // Actualizar memoria con la nueva interacción\n  const newMemoryEntry = {\n    requestId,\n    timestamp: item.json.timestamp,\n    userMessage: item.json.userMessage,\n    finalResponse: item.json.response ? item.json.response.content : '',\n    evaluation: item.json.evaluation || {},\n    modelsUsed: ['gpt-3.5-turbo', 'claude-3-5-sonnet-20241022', 'gemini-pro'],\n    processingTime: item.json.metadata ? item.json.metadata.processingTime : 0\n  };\n  \n  // Simular actualización de base de datos (en producción esto iría a una base de datos real)\n  item.json.memoryUpdate = {\n    userId,\n    newEntry: newMemoryEntry,\n    success: true,\n    indexUpdated: true\n  };\n  \n  // Preparar respuesta final para el cliente\n  item.json.output = {\n    success: true,\n    response: item.json.response,\n    metadata: item.json.metadata,\n    memory: {\n      sessionId: userId,\n      lastUpdate: new Date().toISOString()\n    }\n  };\n  \n  console.log(`Memory updated and indexed for user ${userId}, request ${requestId} with 3-model processing complete`);\n}\n\nreturn items;"
+      },
+      "id": "1e6be8b2-f84b-496d-b89e-b72ffc8ed5a4",
+      "name": "Memory Updater & Indexer",
+      "type": "n8n-nodes-base.code",
+      "position": [96, 230],
+      "typeVersion": 2
+    }
+  ],
+  "connections": {
+    "OMNIA Webhook with Memory": {
+      "main": [[{"node": "Ultimate Protocol with Memory", "type": "main", "index": 0}]]
+    },
+    "Ultimate Protocol with Memory": {
+      "main": [[{"node": "Context Retriever", "type": "main", "index": 0}]]
+    },
+    "Context Retriever": {
+      "main": [[{"node": "Ultimate Coordinator with Memory", "type": "main", "index": 0}]]
+    },
+    "Ultimate Coordinator with Memory": {
+      "main": [
+        [{"node": "Model A - OpenAI GPT-3.5", "type": "main", "index": 0}],
+        [{"node": "Model B - Claude 3.5 Sonnet", "type": "main", "index": 0}],
+        [{"node": "Model D - Google Gemini Pro", "type": "main", "index": 0}]
+      ]
+    },
+    "Model A - OpenAI GPT-3.5": {
+      "main": [[{"node": "Fast-Loop Memory Intelligence", "type": "main", "index": 0}]]
+    },
+    "Model B - Claude 3.5 Sonnet": {
+      "main": [[{"node": "Fast-Loop Memory Intelligence", "type": "main", "index": 0}]]
+    },
+    "Model D - Google Gemini Pro": {
+      "main": [[{"node": "Fast-Loop Memory Intelligence", "type": "main", "index": 0}]]
+    },
+    "Model C - Context Aware (DISABLED)": {
+      "main": [[{"node": "Fast-Loop Memory Intelligence", "type": "main", "index": 0}]]
+    },
+    "Fast-Loop Memory Intelligence": {
+      "main": [[{"node": "Memory Fast-Loop Gate", "type": "main", "index": 0}]]
+    },
+    "Memory Fast-Loop Gate": {
+      "main": [
+        [{"node": "Provisional Memory Response", "type": "main", "index": 0}],
+        [{"node": "Memory Ultimate Evaluation", "type": "main", "index": 0}]
+      ]
+    },
+    "Provisional Memory Response": {
+      "main": [[{"node": "Memory Response Manager", "type": "main", "index": 0}]]
+    },
+    "Memory Ultimate Evaluation": {
+      "main": [[{"node": "Memory External Verification", "type": "main", "index": 0}]]
+    },
+    "Memory External Verification": {
+      "main": [[{"node": "Memory Ultimate Synthesis", "type": "main", "index": 0}]]
+    },
+    "Memory Ultimate Synthesis": {
+      "main": [[{"node": "Memory Response Manager", "type": "main", "index": 0}]]
+    },
+    "Memory Response Manager": {
+      "main": [[{"node": "Memory Updater & Indexer", "type": "main", "index": 0}]]
+    }
+  },
+  "pinData": {},
+  "meta": {
+    "instanceId": "40c57e8e39e8b774f04b5669b104727bec92ee1fb5ab475da563a1ffbfc1a45b"
+  }
+}

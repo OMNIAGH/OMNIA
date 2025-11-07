@@ -1,0 +1,86 @@
+# Docker Compose para NOESIS Prediction APIs
+version: '3.8'
+
+services:
+  noesis-prediction-api:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      - REDIS_HOST=redis
+      - CENSOR_API_URL=http://censor:8000
+      - ANCHOR_API_URL=http://anchor:8000
+    depends_on:
+      - redis
+    volumes:
+      - ./logs:/app/logs
+    restart: unless-stopped
+    networks:
+      - omnianet
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes
+    restart: unless-stopped
+    networks:
+      - omnianet
+
+  # Servicios de apoyo para desarrollo/testing
+  anchor-mock:
+    image: nginx:alpine
+    ports:
+      - "8001:80"
+    volumes:
+      - ./docker/anchor-mock.conf:/etc/nginx/conf.d/default.conf
+    restart: unless-stopped
+    networks:
+      - omnianet
+
+  censor-mock:
+    image: nginx:alpine
+    ports:
+      - "8002:80"
+    volumes:
+      - ./docker/censor-mock.conf:/etc/nginx/conf.d/default.conf
+    restart: unless-stopped
+    networks:
+      - omnianet
+
+  # Monitor y métricas (opcional)
+  prometheus:
+    image: prom/prometheus:latest
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./docker/prometheus.yml:/etc/prometheus/prometheus.yml
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+    networks:
+      - omnianet
+
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin123
+    volumes:
+      - grafana_data:/var/lib/grafana
+    restart: unless-stopped
+    networks:
+      - omnianet
+
+volumes:
+  redis_data:
+  grafana_data:
+
+networks:
+  omnianet:
+    driver: bridge
